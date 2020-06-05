@@ -1,4 +1,4 @@
-# Delivery 4 - The Eagles
+# Eagles Peer Evaluation System
 
 ## Installation
   - Install dependencies with pip  
