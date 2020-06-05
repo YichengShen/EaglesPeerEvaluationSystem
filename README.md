@@ -7,6 +7,16 @@
  ### [Software Presentation](#software-presentation) | [Installation](#installation) | [Apps in the project](#apps-in-the-project) | [Data Models](#data-models) | [ER-diagram](#entity-relationship-diagram) | [Traceability](#data-model-traceability-with-interfaces)
 </div>
 
+<div align='center'>
+<sub>
+by <a href="https://github.com/YichengShen">Yicheng Shen</a> 沈一晟
+</sub>
+</div>
+
+<br/>
+
+---
+
 ## Software Presentation
 ###### Professor Login
 <img src="images/p-login.gif" width="550">
