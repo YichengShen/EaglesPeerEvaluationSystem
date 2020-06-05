@@ -1,5 +1,9 @@
 # Eagles Peer Evaluation System
 
+## Software Presentation
+###### Student Login
+<img src="images/s-login.gif" width="550">
+
 ## Installation
   - Install dependencies with pip  
     `$ pip install -r requirements.txt`
