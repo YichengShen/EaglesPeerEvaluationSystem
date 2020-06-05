@@ -2,6 +2,10 @@
 <div align='center'>
 <strong>CSCI3356 Software Engineering Final Project</strong>
 </div>
+<div align="center">
+
+ ### [Software Presentation](#software-presentation) | [Installation](#installation) | [Apps in the project](#apps-in-the-project) | [Data Models](#data-models) | [ER-diagram](#entity-relationship-diagram) | [Traceability](#data-model-traceability-with-interfaces)
+</div>
 
 ## Software Presentation
 ###### Professor Login
