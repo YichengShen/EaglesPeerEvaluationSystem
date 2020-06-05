@@ -1,4 +1,7 @@
-# Eagles Peer Evaluation System
+<h1 align='center'>Eagles Peer Evaluation System</h1>
+<div align='center'>
+<strong>CSCI3356 Software Engineering Final Project</strong>
+</div>
 
 ## Software Presentation
 ###### Professor Login
