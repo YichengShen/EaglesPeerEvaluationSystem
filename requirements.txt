@@ -3,12 +3,12 @@ APScheduler==3.6.3
 asgiref==3.2.3
 astroid==2.3.3
 backcall==0.1.0
-bleach==3.0.2
+bleach==3.1.4
 certifi==2018.11.29
 cycler==0.10.0
 decorator==4.3.0
 defusedxml==0.5.0
-Django==3.0.2
+Django==3.0.3
 django-appconf==1.0.3
 django-user-accounts==3.0.0
 djangorestframework==3.11.0
@@ -35,7 +35,7 @@ mistune==0.8.4
 MouseInfo==0.1.2
 nbconvert==5.4.0
 nbformat==4.4.0
-notebook==5.7.4
+notebook==5.7.8
 numpy==1.16.0
 pandas==0.25.3
 pandocfilters==1.4.2
