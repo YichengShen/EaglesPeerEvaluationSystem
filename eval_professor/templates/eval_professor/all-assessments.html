@@ -1,0 +1,576 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+<!-- Load templatetags -->
+{% load eval_professor_extras %}
+
+{% load static %}
+
+{% block title %} All Assessments {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+	
+		<!-- ********************** current assessments ********************** -->
+		<div class="container">
+			<div class="container row">
+				<h2 style="color: #6C63FF;">Current Peer Assessments</h2>
+				<form>
+					<button formaction="{% url 'create-new-assessment' %}" class="btn btn-lg btn-outline-dark" style="margin-left: 5%;">Create A New Peer Assessment <i class = "fa fa-plus-square"></i></button>
+				</form>
+			</div>
+
+			{% if assessment_list|length > 0 %}
+				{% for assessment in assessment_list %}
+					{% if assessment.is_current and assessment.is_open %}
+						<div class="column course-box">	
+							<!-- Button trigger modal - the actual modal div is below -->
+							<a data-toggle="modal" data-target="#exampleModal_@{{assessment.id}}" style="font-size: 10px; padding: 10px; background-color: rgb(247, 104, 88);" class="buttons delete-btn float-right" href="">Delete</a>
+							<!-- Modal - this does not show on page, but DONT delete -->
+							<div class="modal fade" id="exampleModal_@{{assessment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Delete Warning</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+									Are you sure you want to delete this assessment?
+									</div>
+									<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+									<form action="{% url 'delete_assessment' assessment_id=assessment.id %}">
+										<button type="submit" class="btn btn-primary red">Confirm and Delete</button>
+									</form>
+									</div>
+								</div>
+								</div>
+							</div>
+							
+							
+							<!-- name and course  -->
+							<h3> {{ assessment.name }} </h3> 
+							<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+							<!-- description of the assessment  -->
+							{% if assessment.description != '' %}
+								<h4><b>Description:</b> {{ assessment.description }}</h4>
+							{% else %}
+								<h4><b>Description:</b> No assessment description</h4>
+							{% endif %}
+							<!-- dates  -->
+							<h4> <b>Time:</b> {{ assessment.start_date }} - {{ assessment.end_date }}</h4>
+							<!-- Button trigger modal for updating dates-->
+							<button class="btn btn-primary help-btn" type="button" data-toggle="modal" data-target="#dateModal_@{{ assessment.id }}">
+								Update start date and due date
+							</button>
+							<!-- Modal -->
+							<div class="modal fade" id="dateModal_@{{ assessment.id }}" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel_@{{ assessment.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h5 class="modal-title" id="dateModalLabel_@{{ assessment.id }}">Update dates</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<!-- the form to update dates  -->
+									<form action="{% url 'update_dates' assessment_id=assessment.id %}" method="post"> {% csrf_token %}
+										<div class="modal-body">
+											
+											<!-- inputs for POST -->
+											<div class="form-group">
+												<label for="startDate">Start Date</label>
+												<input type="date" placeholder="yyyy-mm-dd" class="form-control" name="start date" id="startdate" aria-describedby="startdateHelp" >
+												<small id="startdateHelp" class="form-text text-muted">Note that, on the start date, an e-mail will automatically be sent to students in the course.</small>
+											</div>
+								
+											<div class="form-group">
+												<label for="year">End Date</label>
+												<input type="date" placeholder="yyyy-mm-dd" class="form-control" name="end date" id="enddate" aria-describedby="enddateHelp">
+												<small id="enddateHelp" class="form-text text-muted">Note that, if you change the date to a date in the past, the assessment will close automatically.</small>
+											</div>
+											
+										</div>
+										<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										<button type="submit" class="btn btn-primary">Save changes</button>
+										</div>
+									</form>
+								</div>
+								</div>
+							</div>
+
+							
+
+							<hr>
+							<!-- show other submissions info -->
+							<h4> <b>Number of submissions:</b> {{ assessment.completed_students.all|length }} </h4>
+							{% get_class_average assessment.course assessment as class_avg %}
+							<h4> <b>Current Average Score:</b> {{ class_avg }} </h4>
+							<p style="font-size: 12px; font-weight: 50;">
+								Note: The current average is only based on submissions received so far. The value would vary if you close the assessment.
+							</p>
+
+							<!-- ********************the following is for the collapse style to show info******************** -->
+							<div style="margin-top: 2%; margin-bottom: 2%;">
+
+								<!-- Questions in the assessment  -->
+								<div class="card">
+									<div class="card-header" id="headingOne_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne_@{{ assessment.id }}" aria-expanded="true" aria-controls="collapseOne_@{{ assessment.id }}">
+												Questions in the assessment
+											</button>
+										</h5>
+									</div>
+								
+									<div id="collapseOne_@{{ assessment.id }}" class="collapse" aria-labelledby="headingOne_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											<!-- print questions -->
+											{% if assessment.questions.all|length == 0 %}
+												<p>No questions.</p>
+											{% else %}
+												{% for question in assessment.questions.all|dictsort:"id" %}
+													<p>{{forloop.counter}}. {{ question.question_text }} <b> Type: </b> {{ question.type_answer }} </p>
+												{% endfor %}
+											{% endif %}
+										</div>
+									</div>
+								</div>
+
+								<!-- Students who have not completed the assessment -->
+								<div class="card">
+									<div class="card-header" id="headingTwo_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo_@{{ assessment.id }}" aria-expanded="false" aria-controls="collapseTwo_@{{ assessment.id }}">
+												Students who have not completed the assessment
+											</button>
+										</h5>
+									</div>
+									<div id="collapseTwo_@{{ assessment.id }}" class="collapse" aria-labelledby="headingTwo_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											{% for student in assessment.course.students.all %}
+												{% if student not in assessment.completed_students.all %}
+													{{student.first_name}} {{student.last_name}};
+												{% endif %}
+											{% endfor %}
+											<form>
+												<!-- add the send email function here  -->
+												<!-- define the function in views and call it in the formaction -->
+												<button formaction="{% url 'send_email_reminders' assessment_id=assessment.id %}"style="margin-top: 2%;" class="btn btn-primary help-btn">
+													Send email reminders
+												</button>
+											</form>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Aggregated Results -->
+								<div class="card">
+									<div class="card-header" id="headingThree_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree_@{{ assessment.id }}" aria-expanded="false" aria-controls="collapseThree_@{{ assessment.id }}">
+												Results
+											</button>
+										</h5>
+									</div>
+									<div id="collapseThree_@{{ assessment.id }}" class="collapse" aria-labelledby="headingThree_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											<h4>Results for teams:</h4>
+											<p>Click on team names for details.</p>
+											{% for team in team_list %}
+												{% if team.course == assessment.course %}
+										
+													<!-- Team Details -->
+													<div class="card">
+														<div style="padding: 4px;" class="card-header" id="headingTeam_@{{ assessment.id }}{{ team.id }}">
+															<h5 class="mb-0">
+																<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTeam_@{{ assessment.id }}{{ team.id }}" aria-expanded="false" aria-controls="collapseTeam_@{{ assessment.id }}{{ team.id }}">
+																	<!-- calculate team avg  -->
+																	{% get_team_average team assessment as team_avg %}
+																	<!-- print -->
+																	<p style="margin: 0em;">
+																		<span>{{team.team_name}} </span> &nbsp 
+																		<span style="color: black;">Team Average: {{ team_avg }}</span>
+																	</p>
+																</button>
+															</h5>
+														</div>
+														<div id="collapseTeam_@{{ assessment.id }}{{ team.id }}" class="collapse" aria-labelledby="headingTeam_@{{ assessment.id }}{{ team.id }}" data-parent="#accordion">
+															<div class="card-body">
+																<h4 style="font-size: 18px;">Results for students:</h4>
+																{% for student in team.student.all %}
+																	
+																	<!-- Student Details -->
+																	<div class="card">
+																		<div style="padding: 0%;" class="card-header" id="headingStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}">
+																			<h5 class="mb-0">
+																				<button style="color: #6C63FF; text-decoration: none;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" aria-expanded="false" aria-controls="collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}">
+																					<!-- load result_set instance into result  -->
+																					{% find_result_set assessment.result_sets student team as personal_result %}
+																					<!-- print  -->
+																					<p style="margin: 0em;">
+																						<span>{{student.first_name}} {{student.last_name}}</span> &nbsp 
+																						{% if personal_result.get_overall_average != None %}
+																							<span style="color: black;">Average Score: {{ personal_result.get_overall_average }}</span>
+																						{% else %}
+																							<span style="color: black;">Unrated</span>
+																						{% endif %}
+																					</p>
+																				</button>
+																			</h5>
+																		</div>
+																		<div id="collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" class="collapse" aria-labelledby="headingStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" data-parent="#accordion">
+																			<div class="card-body">
+																				<p>Average score of each question:</p>
+																				<!-- Per Question Average  -->
+																				{% if personal_result != None %}
+																					{% for question in assessment.questions.all %}
+																						{% if question.type_answer == question.TYPE_Rating %}
+																							<!-- find per question avg  -->
+																							{% get_per_question_average personal_result question.id as per_q_avg %}
+																							<!-- print  -->
+																							<p>Question {{forloop.counter}}: {{ per_q_avg }}</p> 
+																						{% else %}
+																						
+																							{% get_free_response personal_result question.id as free_response_text %}
+																							<!-- print  -->
+																							<p>Question {{forloop.counter}}: {{ free_response_text }}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</div>
+																		</div>
+																	</div>
+
+																{% endfor %}
+					
+															</div>
+														</div>
+													</div>
+
+												{% endif %}
+											{% endfor %}
+
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+							<!-- collapse - info END -->
+
+							<hr>
+							<!-- Close Modal button trigger -->
+							<button type="button" class="btn btn-primary buttons purple float-right" data-toggle="modal" data-target="#closeModal_@{{ assessment.id }}">
+								Close Assessment and Release Results
+							</button>
+							<!-- modal  -->
+							<div class="modal fade" id="closeModal_@{{ assessment.id }}" tabindex="-1" role="dialog" aria-labelledby="closeModalLabel_@{{ assessment.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+								  <div class="modal-content">
+									<div class="modal-header">
+									  <h5 class="modal-title" id="closeModalLongTitle_@{{ assessment.id }}">Please confirm your action</h5>
+									  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									  </button>
+									</div>
+									<div class="modal-body">
+										<h4>Once you close this assessment, you CANNOT restart it.</h4>
+										<h4>Are you sure to close the assessment and make results visible to students?</h4>
+									</div>
+									<div class="modal-footer">
+									  	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+									  	<form>
+									  		<button formaction="{% url 'close_and_release' assessment_id=assessment.id %}" class="btn btn-warning">YES. Close Assessment</button>
+										</form>
+									</div>
+								  </div>
+								</div>
+							</div>
+							<!-- end of close assessment modal  -->
+							
+						</div>
+				
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				No current assessments.
+			{% endif %}
+		</div>
+
+
+		<!-- ********************** closed assessments ********************** -->
+		<div class="container">
+			<div class="container row">
+				<h2 style="color: #6C63FF;">Closed Peer Assessments</h2>
+			</div>
+
+			{% if assessment_list|length > 0 %}
+				{% for assessment in assessment_list %}
+					{% if not assessment.is_open %}
+						<div class="column course-box">	
+							<!-- Button trigger modal - the actual modal div is below -->
+							<a data-toggle="modal" data-target="#exampleModal_@{{assessment.id}}" style="font-size: 10px; padding: 10px; background-color: rgb(247, 104, 88);" class="buttons delete-btn float-right" href="">Delete</a>
+							<!-- Modal - this does not show on page, but DONT delete -->
+							<div class="modal fade" id="exampleModal_@{{assessment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Delete Warning</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+									Are you sure you want to delete this assessment?
+									</div>
+									<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+									<form action="{% url 'delete_assessment' assessment_id=assessment.id %}">
+										<button type="submit" class="btn btn-primary red">Confirm and Delete</button>
+									</form>
+									</div>
+								</div>
+								</div>
+							</div>
+							
+							
+							<!-- name and course  -->
+							<h3> {{ assessment.name }} </h3> 
+							<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+							<!-- description of the assessment  -->
+							{% if assessment.description != '' %}
+								<h4><b>Description:</b> {{ assessment.description }}</h4>
+							{% else %}
+								<h4><b>Description:</b> No assessment description</h4>
+							{% endif %}
+							<!-- dates  -->
+							<h4> <b>Time:</b> {{ assessment.start_date }} - {{ assessment.end_date }}</h4>
+
+							<hr>
+							<!-- show other submissions info -->
+							<h4> <b>Number of submissions:</b> {{ assessment.completed_students.all|length }} </h4>
+							{% get_class_avg_no_0 assessment.course assessment as class_avg_no_0 %}
+							{% get_class_std_no_0 assessment.course assessment as class_std_no_0 %}
+							<h4> <b>Average Score</b> (excluding 0s): {{ class_avg_no_0 }}&nbsp;&nbsp;&nbsp;&nbsp;  <b>Standard Deviation:</b> {{ class_std_no_0 }}</h4>
+							{% get_class_average assessment.course assessment as class_avg %}
+							<h4> <b>Average Score</b> (including 0s): {{ class_avg }} </h4>
+							
+
+							<!-- ********************the following is for the collapse style to show info******************** -->
+							<div style="margin-top: 2%; margin-bottom: 2%;">
+
+								<!-- Questions in the assessment  -->
+								<div class="card">
+									<div class="card-header" id="headingOne_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne_@{{ assessment.id }}" aria-expanded="true" aria-controls="collapseOne_@{{ assessment.id }}">
+												Questions in the assessment
+											</button>
+										</h5>
+									</div>
+								
+									<div id="collapseOne_@{{ assessment.id }}" class="collapse" aria-labelledby="headingOne_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											<!-- print questions -->
+											{% if assessment.questions.all|length == 0 %}
+												<p>No questions.</p>
+											{% else %}
+												{% for question in assessment.questions.all|dictsort:"id" %}
+													<p>{{forloop.counter}}. {{ question.question_text }} <b> Type: </b> {{ question.type_answer }} </p>
+												{% endfor %}
+											{% endif %}
+										</div>
+									</div>
+								</div>
+
+								<!-- Students who have not completed the assessment -->
+								<div class="card">
+									<div class="card-header" id="headingTwo_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo_@{{ assessment.id }}" aria-expanded="false" aria-controls="collapseTwo_@{{ assessment.id }}">
+												Students who did not submit (automatically receive 0)
+											</button>
+										</h5>
+									</div>
+									<div id="collapseTwo_@{{ assessment.id }}" class="collapse" aria-labelledby="headingTwo_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											{% for student in assessment.course.students.all %}
+												{% if student not in assessment.completed_students.all %}
+													{{student.first_name}} {{student.last_name}};
+												{% endif %}
+											{% endfor %}
+											<h4><b>Note:</b> The results of these students are 0 automatically.</h4>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Aggregated Results -->
+								<div class="card">
+									<div class="card-header" id="headingThree_@{{ assessment.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree_@{{ assessment.id }}" aria-expanded="false" aria-controls="collapseThree_@{{ assessment.id }}">
+												Results
+											</button>
+										</h5>
+									</div>
+									<div id="collapseThree_@{{ assessment.id }}" class="collapse" aria-labelledby="headingThree_@{{ assessment.id }}" data-parent="#accordion">
+										<div class="card-body">
+											<h4>Results for teams:</h4>
+											<p>Click on team names for details.</p>
+											{% for team in team_list %}
+												{% if team.course == assessment.course %}
+										
+													<!-- Team Details -->
+													<div class="card">
+														<div style="padding: 4px;" class="card-header" id="headingTeam_@{{ assessment.id }}{{ team.id }}">
+															<h5 class="mb-0">
+																<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTeam_@{{ assessment.id }}{{ team.id }}" aria-expanded="false" aria-controls="collapseTeam_@{{ assessment.id }}{{ team.id }}">
+																	<!-- calculate team avg  -->
+																	{% get_team_average team assessment as team_avg %}
+																	<!-- print -->
+																	<p style="margin: 0em;">
+																		<span>{{team.team_name}} </span> &nbsp 
+																		<span style="color: black;">Team Average: {{ team_avg }}</span>
+																	</p>
+																</button>
+															</h5>
+														</div>
+														<div id="collapseTeam_@{{ assessment.id }}{{ team.id }}" class="collapse" aria-labelledby="headingTeam_@{{ assessment.id }}{{ team.id }}" data-parent="#accordion">
+															<div class="card-body">
+																<h4 style="font-size: 18px;">Results for students:</h4>
+																{% for student in team.student.all %}
+																	
+																	<!-- Student Details -->
+																	<div class="card">
+																		<div style="padding: 0%;" class="card-header" id="headingStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}">
+																			<h5 class="mb-0">
+																				<button style="color: #6C63FF; text-decoration: none;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" aria-expanded="false" aria-controls="collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}">
+																					<!-- load result_set instance into result  -->
+																					{% find_result_set assessment.result_sets student team as personal_result %}
+																					<!-- print  -->
+																					<p style="margin: 0em;">
+																						<span>{{student.first_name}} {{student.last_name}}</span> &nbsp 
+																						{% if personal_result.get_overall_average != None %}
+																							<span style="color: black;">Average Score: {{ personal_result.get_overall_average }}</span>
+																						{% else %}
+																							<span style="color: black;">Unrated</span>
+																						{% endif %}
+																					</p>
+																				</button>
+																			</h5>
+																		</div>
+																		<div id="collapseStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" class="collapse" aria-labelledby="headingStudent_@{{ assessment.id }}{{ team.id }}{{ student.id }}" data-parent="#accordion">
+																			<div class="card-body">
+																				<p>Average score of each question:</p>
+																				<!-- Per Question Average  -->
+																				{% if personal_result != None %}
+																					{% for question in assessment.questions.all %}
+																						{% if question.type_answer == question.TYPE_Rating %}
+																							<!-- find per question avg  -->
+																							{% get_per_question_average personal_result question.id as per_q_avg %}
+																							<!-- print  -->
+																							<p>Question {{forloop.counter}}: {{ per_q_avg }}</p> 
+																						{% else %}
+																						
+																							{% get_free_response personal_result question.id as free_response_text %}
+																							<!-- print  -->
+																							<p>Question {{forloop.counter}}: {{ free_response_text }}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</div>
+																		</div>
+																	</div>
+
+																{% endfor %}
+					
+															</div>
+														</div>
+													</div>
+
+												{% endif %}
+											{% endfor %}
+
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+							<!-- collapse - info END -->
+
+							<hr>
+							<form>
+								<button formaction="{% url 'download_csv' assessment_id=assessment.id %}" class="btn btn-primary buttons purple">
+									Download results in Excel spreadsheet
+								</button>
+							</form>
+							
+							<button type="button" class="btn btn-secondary float-right" disabled>
+								Closed
+							</button>
+							
+							
+						</div>
+				
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				No available assessments.
+			{% endif %}
+		</div>
+
+
+
+
+
+		<!-- ********************** past assessments ********************** -->
+		<div class="container">
+			<div class="container row">
+				<h2 style="color: rgb(255, 99, 117); margin-top: 5%;">Past Peer Assessments</h2>
+			</div>
+			{% if assessment_list|length > 0 %}
+				{% for assessment in assessment_list %}
+					{% if not assessment.is_current %}
+						<div class="column course-box">	
+							<!-- name and course  -->
+							<h3> {{ assessment.name }} </h3> 
+							<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+							<!-- description of the assessment  -->
+							{% if assessment.description is not None %}
+								<h4><b>Description:</b> {{ assessment.description }}</h4>
+							{% else %}
+								<h4>No assessment description</h4>
+							{% endif %}
+							<!-- dates  -->
+							<h4> <b>Time:</b> {{ assessment.start_date }} - {{ assessment.end_date }}</h4>
+						</div>
+							
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<p>No past assessments.</p>
+			{% endif %}
+		</div>
+
+		<!-- Important Solution for Grid System on Page  -->
+			<!-- because we must use a loop to show all data, we can learn from the following code to use the grid system in Bootstrap -->
+			<!-- When you do this part please take a look -->
+
+		<!-- <div class="container">
+			<div class="row">
+				{% for product in products %}
+					{% if forloop.counter0|divisibleby:3 and not forloop.first %}<div class="w-100"></div>{% endif %}
+					<div class="col">{{product.title}}</div>
+				{% endfor %}
+			</div>
+		</div> -->
+
+		
+	</div>
+{% endblock %}
+

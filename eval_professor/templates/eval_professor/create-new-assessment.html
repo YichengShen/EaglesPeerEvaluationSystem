@@ -1,0 +1,135 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} New Assessment {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+		<h2>Create New Assessment</h2>
+		<form action="{% url 'make_new_assessment' %}" method="post"> {% csrf_token %}
+			<div class="form-group">
+			  <label>Assessment Name</label>
+			  <input type="text" required=True class="form-control" name="Assessment name" placeholder="Name this assessment">
+			</div>
+
+			<div class="form-group">
+				<label>Description</label>
+				<input type="text" class="form-control" name="description" placeholder="Describe the assessment">
+				<small class="form-text text-muted">Not required. Leave blank if none.</small>
+			</div>
+
+			<div class="form-group">
+				<label>Course</label>
+				<select type="number" class="form-control" name="course id" id="course" placeholder="Choose course">
+					<!-- display all active courses that belong to the current prof -->
+					{% for course in course_list %}
+						{% if request.user in course.professors.all and course.is_active %}
+							<option value="{{ course.id }}">{{ course.course_name }}</option>
+						{% endif %}
+					{% endfor %}
+				</select>
+				<small class="form-text text-muted">Select the course that this assessment belongs to.</small>
+			</div>
+
+			<div class="form-group">
+				<label for="startDate">Start Date</label>
+				<input type="date" placeholder="yyyy-mm-dd" class="form-control" name="start date" id="startdate" aria-describedby="startdateHelp" >
+				<small id="startdateHelp" class="form-text text-muted">Indicate the date that peer assessment opens to students. An e-mail will automatically be sent to members of the course.</small>
+			</div>
+
+			<div class="form-group">
+				<label for="year">End Date</label>
+				<input type="date" placeholder="yyyy-mm-dd" class="form-control" name="end date" id="enddate" aria-describedby="enddateHelp">
+				<small id="enddateHelp" class="form-text text-muted">Indicate the date peer assessment closes.</small>
+			</div>
+
+			<hr>
+
+			<!-- dynamically add questions below -->
+
+			<h4>Create questions for this Assessment</h4>
+
+			
+			<div class="form-group after-add-more">
+				<label for="">Question Text</label>
+				<input type="text" required=True class="form-control" name="question-0" id="question-0" placeholder="Enter question text">
+
+				<div class="form-group" style="margin-top: 5px;">
+					<label>Answer Type</label>
+					<select class="form-control" name="answer type-0" id="answer type-0">
+						<option>Rating Scale (1 - 5)</option>
+						<option>Free Response</option>
+					</select>
+					<small class="form-text text-muted">A rating question asks for a number between 1 and 5; A free response question asks for a text response.</small>
+				</div>
+
+				<hr>
+			</div>
+
+			<button type="button" class="btn btn-primary buttons purple add-more">Add a question</button>
+			<small class="form-text text-muted">Click here if you want add more questions.</small>
+
+			<hr>
+
+			<!-- the submit button  -->
+			<button style="margin-top: 10px;" type="submit" class="buttons purple">Finish creation</button>
+
+		</form>
+			
+			<!-- This is used to dynamically add question - content that appears after clicking add a question  -->
+			<div class="copy d-none">
+				<div class="form-group remove-this" >
+
+					<button style="margin-bottom: 2px; font-size: 14px; padding: 11px;" class="buttons red float-right remove" type="button">Delete this question</button>
+					
+					<label for="">Question Text</label>
+
+					<input type="text" required=True class="form-control" id="question-" placeholder="Enter question text">
+
+					<div class="form-group" style="margin-top: 5px;">
+						<label>Answer Type</label>
+						<select class="form-control" id="answer type-">
+							<option>Rating Scale (1 - 5)</option>
+							<option>Free Response</option>
+						</select>
+					</div>
+					<small class="form-text text-muted">A rating question asks for a number between 1 and 5; A free response question asks for a text response.</small>
+
+					<hr>
+				</div>
+			</div>
+
+		<!-- the discard button  -->
+		<form>
+				<!-- I put form around this button in order to let formaction work as a link -->
+				<button formaction="{% url 'all-assessments' %}" class="buttons red float-right">Discard</button>
+		</form>
+	</div>
+
+	<!-- // For add and delete question  -->
+	<script>
+		var i = 0;
+		$(document).ready(function() {
+			$(".add-more").click(function(){
+				var html = $(".copy").html();
+				$(".add-more").before(html);
+				// set dynamic id and name 
+				var input_tag = document.getElementById("question-");
+				var select_tag = document.getElementById("answer type-");
+				window.i++;
+				console.log(window.i);
+				var name_to_set1 = 'question-' + i;
+				var name_to_set2 = 'answer type-' + i;
+				input_tag.name = name_to_set1;
+				input_tag.id = name_to_set1;
+				select_tag.name = name_to_set2;
+				select_tag.id = name_to_set2;
+			});
+			$("body").on("click",".remove",function(){ 
+				$(this).parents(".remove-this").remove();
+			});
+		});
+	</script>
+{% endblock %}

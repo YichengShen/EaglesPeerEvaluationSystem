@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login/css/index.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+  
+    <div class="top-container">
+      <h1>Welcome,</h1>
+      <h2>Are you a...</h2>
+    </div>
+    <div class="middle-container">
+      <div class="professor-box box border-shadow" tabindex="1">
+        <img class="box-img" src="{% static 'login/assets/professor.svg' %}" alt="professor-img">
+        <h2 class="professor-header">Professor</h2>
+        <p class="professor-subheader">Click here</p>
+      </div>
+      <div class="student-box box border-shadow" tabindex="2">
+        <img class="box-img student-img" src="{% static 'login/assets/student.svg' %}" alt="student-img">
+        <h2 class="student-header">Student</h2>
+        <p class="student-subheader">Click here</p>
+      </div>
+    </div>
+      <div class="bottom-container">
+        <button disabled="true" class="next-btn " >Next</button>
+      </div>
+
+
+  <script>
+    let destination = '';
+    const studentBox = document.querySelector('.student-box');
+    const professorBox = document.querySelector('.professor-box');
+    const nextButton = document.querySelector('.next-btn')
+
+    studentBox.addEventListener('click', () => {
+      console.log('student focus')
+      nextButton.disabled = false;
+      destination = 'student-login';
+    });
+
+    professorBox.addEventListener('click', () => {
+      console.log('professor focus')
+      nextButton.disabled = false;
+      destination = 'professor-login';
+    });
+
+    nextButton.addEventListener('click', () => {
+      console.log('next button clicked', destination)
+      document.location.href = destination
+    });
+  </script>
+
+  </body>
+</html>

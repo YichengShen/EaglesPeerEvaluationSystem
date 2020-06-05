@@ -1,0 +1,202 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} My Courses {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+
+		<!-- ********************** current courses ********************** -->
+		<div class="container">
+			<!-- title and the add button  -->
+			<div class="container row">
+				<h2 style="color: #6C63FF;">Current Courses</h2>
+				<form>
+					<button formaction="{% url 'create-new-course' %}" class="btn btn-lg btn-outline-dark" style="margin-left: 5%;">Create A New Course <i class = "fa fa-plus-square"></i></button>
+				</form>
+			</div>
+
+			{% if course_list %}
+				<!-- <div class="row"></div> -->   
+					{% for course in course_list|dictsort:"course_code" %}	
+						<!-- limit courses displayed to only courses owned by this professor  -->
+						{% if request.user in course.professors.all %}
+						<!-- check if current courses  -->
+						{% if course.is_active %} 
+							<div class="column course-box">	
+								<!-- Button trigger modal - the actual modal div is below -->
+								<a data-toggle="modal" data-target="#exampleModal_@{{course.id}}" style="font-size: 10px; padding: 10px; background-color: rgb(247, 104, 88);" class="buttons delete-btn float-right" href="">Delete</a>
+								<!-- Modal - this does not show on page, but DONT delete -->
+								<div class="modal fade" id="exampleModal_@{{course.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Delete Warning</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										</div>
+										<div class="modal-body">
+										Are you sure you want to delete this course?
+										</div>
+										<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+										<form action="{% url 'delete_course' course_id=course.id %}">
+											<button type="submit" class="btn btn-primary red">Confirm and Delete</button>
+										</form>
+										</div>
+									</div>
+									</div>
+								</div>
+
+								<h3> {{ course.course_name }}</h3>
+								<!-- show all professors for this course  -->
+								{% for prof in course.professors.all|dictsort:"first_name" %}
+								<h4> Professor {{ prof.first_name }} {{ prof.last_name }}</h4>
+								{% endfor %}
+								<!-- show other course info -->
+								<div class="row no-gutters" style="padding: 0; top: 0; margin-bottom: 0;">
+									<h4> <b>Code:</b> {{ course.course_code }}</h4>
+									<h4> <b>Section:</b> {{ course.section_number }}</h4>
+									<h4> <b>Time:</b> {{ course.year }}{{ course.semester }}</h4>
+								</div>
+								<hr>
+								<h4> <b>Number of students:</b> {{ course.students.all|length }} </h4>
+
+								<!-- the following is for the collapse style to show student info -->
+								<div style="margin-top: 2%; margin-bottom: 2%;">
+									<div class="card">
+										<div class="card-header" id="headingOne_@{{ course.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne_@{{ course.id }}" aria-expanded="true" aria-controls="collapseOne_@{{ course.id }}">
+											Show all students
+											</button>
+										</h5>
+										</div>
+									
+										<div id="collapseOne_@{{ course.id }}" class="collapse" aria-labelledby="headingOne_@{{ course.id }}" data-parent="#accordion">
+										<div class="card-body">
+											{% if course.students.all|length == 0 %}
+												<p>No students in the course.</p>
+											{% else %}
+												{% for student in course.students.all|dictsort:"last_name" %}
+
+													<div class="student-info"> {{ student.last_name }}, {{ student.first_name }} - {{ student.email }} 
+														<a style="color: #6C63FF; margin-left: 2%;" href="{% url 'remove_student' course_id=course.id eagle_id=student.eagle_id %}"><i class="fa fa-times"></i></a> 
+													</div> 
+
+												{% endfor %}
+											{% endif %}
+										</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-header" id="headingTwo_@{{ course.id }}">
+										<h5 class="mb-0">
+											<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo_@{{ course.id }}" aria-expanded="false" aria-controls="collapseTwo_@{{ course.id }}">
+											Add student to course
+											</button>
+										</h5>
+										</div>
+										<div id="collapseTwo_@{{ course.id }}" class="collapse" aria-labelledby="headingTwo_@{{ course.id }}" data-parent="#accordion">
+										<div class="card-body">
+											Enter email <b>OR</b> Eagle ID (only choose 1) of the student. Note that a student must be registered by the admin to have a valid email or Eagle ID.
+											<!-- Form to take inputs -->
+											<form action="{% url 'add_student' course_id=course.id %}" method="post">
+												<div class="container">
+														<div class="row align-items-end">
+															<div class="form-group col-5 col-md-5 ">
+																<label for="">Email or Eagle ID</label>
+																{% csrf_token %}
+																<input name='id or email' required=True  class="form-control" type="text">
+															</div>
+								
+															<div class="form-group col-6 col-md-2">
+																<button type="submit" class="btn btn-primary buttons purple">Add</button>
+															</div>
+														</div>
+												</div>
+											</form>
+											<!-- Form Ends -->	  
+
+										</div>
+										</div>
+									</div>
+									
+								</div>
+								<!-- collapse - student info END -->
+
+							</div>
+						{% endif %}
+						{% endif %}
+					{% endfor %}
+				<!-- </div>		 -->
+			{% else %}
+				<p>No current courses are available. </p>
+			{% endif %}
+		</div>
+
+		<!-- ********************** past courses ********************** -->
+		<div class="container">
+			<!-- title  -->
+			<div class="container row">
+				<h2 style="color: rgb(255, 99, 117); margin-top: 5%;">Past Courses</h2>
+			</div>
+
+			{% if course_list %}
+				<!-- <div class="row"></div> -->
+					{% for course in course_list|dictsort:"course_code" %}	
+						{% if request.user in course.professors.all %}
+						{% if not course.is_active %}
+							<div class="column course-box">	
+										<!-- Button trigger modal - the actual modal div is below -->
+										<a data-toggle="modal" data-target="#exampleModal_@{{course.id}}" style="font-size: 10px; padding: 10px; background-color: rgb(247, 104, 88);" class="buttons delete-btn float-right" href="">Delete</a>
+										<!-- Modal - this does not show on page, but DONT delete -->
+										<div class="modal fade" id="exampleModal_@{{course.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Delete Warning</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+												</div>
+												<div class="modal-body">
+												Are you sure you want to delete this course?
+												</div>
+												<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+												<form action="{% url 'delete_course' course_id=course.id %}">
+													<button type="submit" class="btn btn-primary red">Confirm and Delete</button>
+												</form>
+												</div>
+											</div>
+											</div>
+										</div>
+
+										<h3> {{ course.course_name }}</h3>
+										{% for prof in course.professors.all|dictsort:"first_name" %}
+										<h4> Professor {{ prof.first_name }} {{ prof.last_name }}</h4>
+										{% endfor %}
+										<div class="row no-gutters" style="padding: 0; top: 0; margin-bottom: 0;">
+											<h4> <b>Code:</b> {{ course.course_code }}</h4>
+											<h4> <b>Section:</b> {{ course.section_number }}</h4>
+											<h4> <b>Time:</b> {{ course.year }}{{ course.semester }}</h4>
+										</div>
+										
+							</div>
+						{% endif %}
+						{% endif %}
+					{% endfor %}
+				<!-- </div>		 -->
+			{% else %}
+				<p>No past courses are available. </p>
+			{% endif %}
+		</div>
+		
+		
+		
+	</div>
+{% endblock %}

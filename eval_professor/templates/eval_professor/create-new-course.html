@@ -1,0 +1,66 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} New Course {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+		<h2>Create New Course</h2>
+		<form action="{% url 'make_new_course' %}" method="post">
+			<div class="form-group">
+			  <label>Course Name</label>
+			  {% csrf_token %}
+			  <input type="text" required=True class="form-control" name="course name" placeholder="Name this course">
+			</div>
+
+			<div class="form-group">
+				<label>Course Code</label>
+				<input type="number" required=True min="1000" max="9999" step="1" class="form-control" name="course code" id="courseCode" aria-describedby="courseCodeHelp" placeholder="Create a course code">
+				<small id="courseCodeHelp" class="form-text text-muted">Requires a 4-digit number that does not start with 0. Course code helps to identify this course.</small>
+			</div>
+
+			<div class="form-group">
+				<label for="sectionNumber">Section Number</label>
+				<input type="number" required=True min="1" max="99" step="1" class="form-control" name="section number" id="sectionNumber" aria-describedby="sectionNumberHelp" placeholder="Create a section number">
+				<small id="sectionNumberHelp" class="form-text text-muted">Requires a number between 1 and 99. Section number helps to identify this course.</small>
+			</div>  
+
+			<div class="form-group">
+				<label for="ProfessorID">Professor Eagle ID</label>
+				<input type="text" class="form-control" name="professor ID" id="ProfessorID" aria-describedby="ProfessorIDHelp" placeholder="{{ request.user.eagle_id }}" readonly>
+				<small id="ProfessorIDHelp" class="form-text text-muted">Your Eagle ID is automatically filled out for you. No need to change.</small>
+			</div> 
+
+			<div class="form-group">
+				<label for="coProfessorID">Co-professor Eagle ID</label>
+				<input type="text" class="form-control" name="co-professor ID" id="coProfessorID" aria-describedby="coProfessorIDHelp" placeholder="Co-professor's ID. Leave empty if not applicable.">
+				<small id="coProfessorIDHelp" class="form-text text-muted">If there is another professor, type in his/her Eagle ID here. If not, leave blank.</small>
+			</div> 
+
+			<div class="form-group">
+				<label for="year">Year of Realization</label>
+				<input type="number" required=True min="1900" max="2099" step="1" class="form-control" name="year" id="year" aria-describedby="yearHelp" placeholder="Enter year of realization">
+				<small id="yearHelp" class="form-text text-muted">Year of realization indicates the year that this course ends.</small>
+			</div>
+
+			<div class="form-group">
+				<label for="semester">Semester of Realization</label>
+				<select class="form-control" name="semester" id="semester">
+					<option>Fall</option>
+					<option>Spring</option>
+				</select>
+				<small id="yearHelp" class="form-text text-muted">Semester of realization indicates the semester that this course ends. (Defaults to Fall)</small>
+			</div>
+
+			<button type="submit" class="btn btn-primary buttons purple">Create New Course</button>
+			
+			
+		  </form>
+		  	<form>
+				<!-- I put form around this button in order to let formaction work as a link -->
+				<button formaction="{% url 'my-courses' %}" style="position: absolute; right: 2%;" class="btn btn-primary buttons red">Discard</button>
+			</form>
+	</div>
+{% endblock %}

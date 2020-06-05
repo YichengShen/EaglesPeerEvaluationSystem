@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Professor Login</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}">
+
+  </head>
+  <body>
+    {% for message in messages %}
+      <div class="error-box">
+        <h1 class="error-message">{{ message }}</h1>
+      </div>
+
+    {% endfor %}
+
+    <img class="background-image" src="{% static "login/assets/professorLogin.svg" %}" alt="professor-img">
+    <div class="login-box border-shadow">
+      <span><img class="lock-icon" src="{% static "login/assets/lock.png" %}" alt="lock-icon"></span>
+      <h2>Professor Login</h2>
+      <form action="{% url 'log_in' %}" method="post">
+        {% csrf_token %}
+        <input class="login-input" type="text" name="email" placeholder="Email Address *">
+        <input class="login-input" type="password" name="password" placeholder="Password *">
+        <button class="buttons" type="submit"> Login </button>
+      </form>
+      <button class="buttons" onclick="window.location.href = '/'">Back</button>
+      <h3>Team The Eagles 2020.</h3>
+    </div>
+  </body>
+</html>

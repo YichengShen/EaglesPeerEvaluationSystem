@@ -1,0 +1,46 @@
+{% extends 'eval_student/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} Student Dashboard {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+		<div class="container">
+			<h3>Welcome, {{ user.first_name }}</h3>
+		</div>
+		<div class="container">
+			<div class="row first-row">
+				<a class="btn buttons col course-box" href="{% url 'peer-assessments' %}" role="button">
+					<i style="font-size: 35px; color: rgb(115, 229, 115)" class = "fa fa-bar-chart"></i> 
+					<h4 style="margin-top: 5%; color: black;">Peer Assessments</h4>
+				</a>
+	
+				<a class="btn buttons col course-box" href="{% url 'completed-assessments' %}" role="button">
+					<i style="font-size: 35px; color: #6361e8" class = "fa fa-book"></i> 
+					<h4 style="margin-top: 5%; color: black;">Results</h4>
+				</a>
+			</div>
+			<div class="row second-row">
+				<!-- add more links if need -->
+			</div>
+		</div>
+
+		<div class="container">
+			<p>
+				<button class="btn btn-primary help-btn" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+					  First time? Need help?
+				</button>
+			  </p>
+			  <div class="collapse" id="collapseExample">
+				<div class="card card-body">
+					<h3>Things you can do here:</h3>
+					<h4>1. Go to <a class="help-text" href="{% url 'peer-assessments' %}">'Peer Assessments' page</a> to evaluate your teammates.</h4>
+					<h4>2. Go to <a class="help-text" href="{% url 'completed-assessments' %}">'Results' page</a> to see your score given by your teammates.</h4>
+				</div>
+			  </div>
+		</div>
+
+	</div>
+{% endblock %}

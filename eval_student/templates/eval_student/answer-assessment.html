@@ -1,0 +1,49 @@
+{% extends 'eval_student/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} {{ assessment.name }} {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+		<h3>{{ assessment.name }} for {{ assessment.course.course_name }}</h3>
+		<hr>
+
+		<form action="{% url 'submit_assessment' assessment_id=assessment.id %}" method="post"> {% csrf_token %}
+
+			{% for student in evaluated_list %}
+				<div class="container">
+					<h4>Please evaluate <b style="font-weight: 500;">{{student.first_name}} {{student.last_name}}</b></h4>
+				</div>
+
+				{% for question in question_list %}
+				<div class="container" style="background-color: rgba(107, 99, 255, 0.036); border-radius: 6px;">
+					<h4 style="margin-bottom: 15px; margin-top: 30px;">{{forloop.counter}}. {{ question.question_text }}</h4>
+					{% if question.type_answer == question.TYPE_Rating %}
+						<div>
+							<b>1</b>  <input style="width: 95%;" type="range" class="custom-range" min="1" max="5" step="1" id="q_@{{ student.eagle_id }}{{ question.id }}" name="q_@{{ student.eagle_id }}{{ question.id }}"> <b> 5</b>
+						</div>
+					{% else %}
+						<textarea style="width: 95%;" rows="5" id="q_@{{ student.eagle_id }}{{ question.id }}" name="q_@{{ student.eagle_id }}{{ question.id }}"></textarea>
+					{% endif %}
+				</div>
+				{% endfor %}
+				<hr style="margin-bottom: 30px;">
+			
+			{% endfor %}
+
+			<!-- the submit button  -->
+			<button style="margin-top: 10px;" type="submit" class="buttons purple">Submit</button>
+
+		</form>
+	
+
+		<!-- the discard button  -->
+		<form>
+				<!-- I put form around this button in order to let formaction work as a link -->
+				<button formaction="{% url 'peer-assessments' %}" class="buttons red float-right">Discard</button>
+		</form>
+	</div>
+
+{% endblock %}

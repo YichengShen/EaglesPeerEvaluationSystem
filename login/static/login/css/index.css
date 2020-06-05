@@ -1,0 +1,144 @@
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: #f3f4f4;
+  }
+  
+  h1 {
+    font-weight: 500;
+    font-size: 35px;
+  }
+  
+  h2 {
+    font-weight: 400;
+    font-size: 25px;
+  
+  }
+  
+  .top-container {
+    margin: 100px auto 0 auto;
+    text-align: center;
+    line-height: 17px;
+  }
+  
+  .middle-container {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .box {
+    display: inline-block;
+    background-color: white;
+    width: 35%;
+    height: 275px;
+    vertical-align: top;
+    overflow: hidden;
+  }
+  
+  .box:hover {
+    -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background-color: #f6f6f6;
+  }
+  
+  .box:focus {
+    background-color: #040a7b;
+    color: white;
+  }
+  
+  .box-img {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    right: 25px;
+    bottom: 10px;
+  }
+  
+  .student-img {
+    position: relative;
+    width: 225px;
+    height: 225px;
+    right: 30px;
+    top: 30px;
+    padding: 0px;
+  
+  }
+
+  .professor-box {
+    position: relative;
+    right: 15px;
+  }
+  
+  .student-box {
+    position: relative;
+    left: 15px;
+  
+  }
+  
+  .professor-header {
+    display: inline-block;
+    position: relative;
+    bottom: 175px;
+    left: 20px;
+  }
+  
+  .professor-subheader {
+    display: inline-block;
+    position: relative;
+    bottom: 145px;
+    right: 90px;
+  }
+  
+  .student-header {
+    display: inline-block;
+    position: relative;
+    bottom: 100px;
+    left: 20px;
+  }
+  
+  .student-subheader {
+    display: inline-block;
+    position: relative;
+    bottom: 70px;
+    right: 72px;
+  }
+  
+  .bottom-container {
+    text-align: center;
+    margin-top: 25px;
+  }
+  
+  .next-btn {
+    border-color: #4a49ac;
+    border-style: none;
+    outline: none;
+    border: 0;
+    border-radius: 3px;
+    height: 0px;
+    line-height: 5px;
+    color: white;
+    width: 72.5%;
+    font-size: 12px;
+    padding: 15px;
+    background-color: #4a49ac;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 25px;
+  }
+  
+  .next-btn:hover {
+    -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background-color: #4a49ac;
+  }
+  
+  .next-btn:disabled {
+    background-color: gray;
+  }

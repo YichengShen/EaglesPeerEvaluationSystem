@@ -1,0 +1,194 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} Teams {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+		<div class="container">
+			<h2>Teams in your courses</h2>
+
+			<!-- the following is for the collapse style to show student info -->
+			<div style="margin-top: 2%;" id="accordion">
+				<div class="card">
+				  <div class="card-header" id="headingOne">
+					<h5 class="mb-0">
+					  <button style="color: #6C63FF;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Add A New Team
+					  </button>
+					</h5>
+				  </div>
+			  
+				  <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+					<div class="card-body">
+						Enter information of the new team.
+						<!-- Form to take inputs -->
+						<form action="{% url 'add_new_team' %}" method="post">
+							<div class="container">
+									<div class="row align-items-end">
+										<div class="form-group col-5 col-md-5 " style="margin-bottom: 0;">
+											<label for="">Team Name</label>
+											{% csrf_token %}
+											<input name='team name' required=True maxlength="60" class="form-control" type="text">
+											<small class="form-text text-muted">Enter a name with less than 60 characters.</small>
+										</div>
+									</div>
+
+									<div class="row align-items-end" style="top: 0;">
+										<div class="form-group col-5 col-md-5 ">
+											<label for="courses">Select the course that this team is in.</label>
+											<select id="courses" name="course id" required=True  class="form-control" type="number">
+												{% for course in course_list %}
+													{% if course.is_active and request.user in course.professors.all %}
+														<option value="{{ course.id }}">{{ course.course_name }}</option>
+													{% endif %}
+												{% endfor %}
+											</select>
+											
+										</div>
+			
+										<div class="form-group col-6 col-md-2">
+											<button type="submit" class="btn btn-primary buttons purple">Add New Team</button>
+										</div>
+									</div>
+							</div>
+						</form>
+						<!-- Form Ends -->
+					</div>
+				  </div>
+				</div>
+
+				<!-- <div class="card">
+				  <div class="card-header" id="headingTwo">
+					<h5 class="mb-0">
+					  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Collapsible Group Item #2
+					  </button>
+					</h5>
+				  </div>
+				  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+					<div class="card-body">
+					  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+					</div>
+				  </div>
+				</div>
+
+				<div class="card">
+				  <div class="card-header" id="headingThree">
+					<h5 class="mb-0">
+					  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						Collapsible Group Item #3
+					  </button>
+					</h5>
+				  </div>
+				  <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					<div class="card-body">
+					  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+					</div>
+				  </div>
+				</div> -->
+
+			  </div>
+			<!-- collapse - student info END -->
+
+		</div>
+
+
+		<!-- Important Solution for Grid System on Page  -->
+			<!-- because we must use a loop to show all data, we can learn from the following code to use the grid system in Bootstrap -->
+			
+
+
+		<div class="container">
+			<div class="row">
+				{% for team in team_list|dictsort:"course.id" %}
+					{% if request.user in team.course.professors.all %}
+						{% if forloop.counter0|divisibleby:3 and not forloop.first %}<div class="w-100"></div>{% endif %}
+
+						<!-- this div is the grid containing a team's info -->
+						<div class="col course-box">
+							<h3 style="font-size: 20px;"> {{team.team_name}}</h3>
+							<h4 style="font-size: 13px;"> in {{team.course.course_name}}</h4>
+
+							<hr/>
+							<!-- show all students in this team  -->
+							{% if team.student.all|length > 0 %}
+								{% for member in team.student.all|dictsort:"first_name" %}
+									<div class="student-info"> {{ member.last_name }}, {{ member.first_name }} - {{ member.email }} 
+										<a style="color: #6C63FF; margin-left: 2%;" href="{% url 'remove_student_from_team' team_id=team.id eagle_id=member.eagle_id %}"><i class="fa fa-times"></i></a> 
+									</div> 
+								{% endfor %}
+							{% else %}
+								<div class="student-info"> empty </div>
+							{% endif %}
+							<hr/>
+
+							<div class="card">
+								<div class="card-header" id="headingTeamBox_@{{ team.id }}">
+									<h5 class="mb-0">
+									<button style="color: #6C63FF;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTeamBox_@{{ team.id }}" aria-expanded="false" aria-controls="collapseTeamBox_@{{ team.id }}">
+										Add a student
+									</button>
+									</h5>
+								</div>
+								<div id="collapseTeamBox_@{{ team.id }}" class="collapse" aria-labelledby="headingTeamBox_@{{ team.id }}">
+									<div class="card-body">
+										<!-- Form to take inputs and dropdown search -->
+										<form action="{% url 'add_student_to_team' team_id=team.id %}" method="post">{% csrf_token %}
+											
+												<label for="add" style="font-size: 15px; font-weight: 15px;">Add a student:</label>
+												<input type="text" list="add_list" id="add" class="form-control" name="name_id" placeholder="Search here..." aria-describedby="addHelp"/>
+												<small id="addHelp" class="form-text text-muted">Type in name/Eagle ID to search. Note that you must add a student to this course before you add him/her to a team in the course.</small>
+
+												<datalist id="add_list">
+													{% for student in team.course.students.all %}
+														<option value="{{ student.first_name }} {{ student.last_name }} - {{ student.eagle_id }}">
+													{% endfor %}
+												</datalist>
+
+												<button type="submit" class="btn btn-primary buttons purple float-right" style=" font-size: 15px; padding: 15px; margin-bottom: 1%;">Add</button>
+											
+										</form>
+										<!-- form END -->
+									</div>
+								</div>
+							</div>
+
+							<!-- Button trigger modal - the actual modal div is below -->
+							<a data-toggle="modal" data-target="#exampleModal_@{{team.id}}" style="position:absolute; top: 30px; right:5%; font-size: 10px; padding: 10px; background-color: rgb(247, 104, 88);" class="buttons delete-btn" href="">Delete</a>
+					
+							<!-- Modal - this does not show on page, but DONT delete -->
+							<div class="modal fade" id="exampleModal_@{{team.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Delete Warning</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+									Are you sure you want to delete this team?
+									</div>
+									<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+									<form action="{% url 'delete_team' team_id=team.id %}">
+										<button type="submit" class="btn btn-primary red">Confirm and Delete</button>
+									</form>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+
+
+
+	</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+
+
+.course-box {
+    width: 90% !important;
+    background-color: white;
+    color: black;
+    padding: 25px;
+    padding-bottom: 50px;
+    margin-right: 15px;
+    margin-top: 25px;
+    border-radius: 3px;
+    box-shadow: 2px 2px grey;
+  }
+
+
+  .delete-btn:hover {
+      color: white;
+  }
+
+  h4 {
+      font-weight: 80;
+      margin-right: 5%;
+  }
+
+
+  .student-info {
+      font-size: small;
+      font-weight: 40;
+  }

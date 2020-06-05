@@ -1,0 +1,122 @@
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: #f3f4f4;
+  }
+  
+  h1 {
+    font-weight: 500;
+    font-size: 35px;
+  }
+  
+  h2 {
+    font-weight: 400;
+    font-size: 25px;
+  }
+
+  .background-image {
+    width: 65%;
+    position: relative;
+    left: 7.5%;
+  }
+  
+  .login-box {
+    position: absolute;
+    width: 25%;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .lock-icon {
+    width: 20px;
+    height: 20px;
+  
+    position: relative;
+    top: 4px;
+  }
+  
+  .login-input {
+    display: inline-block;
+    width: 80%;
+    padding: 15px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: lightgrey;
+    border-width: 1px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .login-input:focus {
+    border-color: #040a7b;
+  }
+
+.buttons {
+  border-color: #4a49ac;
+  border-style: none;
+  outline: none;
+  border: 0;
+  border-radius: 3px;
+  height: 0px;
+  line-height: 0px;
+  color: white;
+  width: 80%;
+  font-size: 15px;
+  padding: 18px;
+  background-color: #4a49ac;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.buttons:hover {
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  background-color: #4a49ac;
+  color: white;
+  text-decoration: none !important;
+}
+
+  
+  span {
+    top: 40px;
+    position: relative;
+    line-height: 80px;
+    padding: 8px;
+  
+    -moz-border-radius: 100px; 
+    border-radius: 100px; 
+  
+    background-color: #6a68f6;
+    text-align: center;
+    font-size: 17px;
+  }
+  
+  .error-box {
+    background-color: black;
+    border-radius: 4px;
+    position: absolute;
+    left: 25%;
+    top: 25px;
+    padding: 6px 200px 6px 20px;
+    z-index: 100;
+    opacity: 80%;
+    font-weight: 400;
+  }
+  
+  .error-message {
+    font-size: 20px;
+    color: white;
+  }
+
+  h3 {
+    font-weight: 10;
+    font-size: 10px;
+    margin-top: 20px;
+    margin-bottom: 85%;
+    color: rgb(99, 96, 96);
+  }

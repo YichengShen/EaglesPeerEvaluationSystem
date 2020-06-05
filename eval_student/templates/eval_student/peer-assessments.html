@@ -1,0 +1,198 @@
+{% extends 'eval_student/base-sidebar.html'%}
+
+<!-- Load templatetags -->
+{% load eval_student_extras %}
+
+{% load static %}
+
+{% block title %} Your Peer Assessments {% endblock %}
+
+{% block content%}
+<!-- Other page content to the right of the NAV BAR -->
+<div id="main">
+
+	<div class="container">
+		<h2>{{ user.first_name }}'s Peer Assessments</h2>
+	</div>
+
+	<!-- assessments to-do -->
+	<div class="container">
+
+		<h2 style="color: #6C63FF; margin-bottom: 0;">To-Do</h2>
+
+		{% if assessment_list|length > 0 %}
+			<div class="row">
+				{% for assessment in assessment_list %}
+					{% if not assessment.is_missed and request.user not in assessment.completed_students.all and assessment.is_open %}
+						{% if forloop.counter0|divisibleby:3 and not forloop.first %}<div class="w-100"></div>{% endif %}
+						<div class="col grid-box">
+							<!-- name and course  -->
+							<h3> {{ assessment.name }} </h3> 
+							<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+							<!-- description of the assessment  -->
+							{% if assessment.description != '' %}
+								<p><b>Description:</b> {{ assessment.description }}</p>
+							{% else %}
+								<p><b>Description:</b> No assessment description</p>
+							{% endif %}
+							<!-- dates  -->
+							<p> <b>Due:</b> {{ assessment.end_date }}</p>
+							<p> <b>Time left:</b> {{ assessment.time_left }}</p>
+							<hr>
+							
+							<form>
+								<button formaction="{% url 'answer-assessment' assessment_id=assessment.id %}" class="btn btn-primary buttons purple float-right">Start</button>
+							</form>
+							
+						</div>
+
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% else %}
+			<p>No peer assessment available.</p>
+		{% endif %}
+	</div>
+
+
+
+	<!-- assessments completed on time -->
+	<div class="container">
+
+		<h2 style="color: #6C63FF; margin-bottom: 0;">Completed</h2>
+	
+			{% if assessment_list|length > 0 %}
+				<div class="row">
+					{% for assessment in assessment_list %}
+						{% if not assessment.is_missed and request.user in assessment.completed_students.all %}
+							{% if forloop.counter0|divisibleby:3 and not forloop.first %}<div class="w-100"></div>{% endif %}
+							<div class="col grid-box">
+								<!-- name and course  -->
+								<h3> {{ assessment.name }} </h3> 
+								<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+								<!-- description of the assessment  -->
+								{% if assessment.description != '' %}
+									<p><b>Description:</b> {{ assessment.description }}</p>
+								{% else %}
+									<p><b>Description:</b> No assessment description</p>
+								{% endif %}
+								<!-- dates  -->
+								<p> <b>Due:</b> {{ assessment.end_date }}</p>
+								<hr>
+								<!-- *************Edit YOUR RESPONSE****************  -->
+								{% if assessment.is_open %}
+									<!-- Button trigger modal -->
+									<button type="button" class="btn btn-primary buttons purple float-right" data-toggle="modal" data-target="#editModal_@{{ assessment.id }}">
+										Edit
+									</button>
+									
+									<!-- Modal -->
+									<div class="modal fade" id="editModal_@{{ assessment.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLongTitle_@{{ assessment.id }}" aria-hidden="true">
+										<div class="modal-dialog modal-lg" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+											<h5 class="modal-title" id="editModalLongTitle_@{{ assessment.id }}">Editing your answers</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+											</div>
+
+											<!-- form starts here -->
+											<form action="{% url 'edit_assessment' assessment_id=assessment.id %}" method="post"> {% csrf_token %}
+												<div class="modal-body">
+													<h3>{{ assessment.name }} for {{ assessment.course.course_name }}</h3>
+													<hr>
+												
+													<!-- load the list of students who are evaluated  -->
+													{% get_eval_list assessment request.user as evaluated_list %}
+													{% for student in evaluated_list %}
+														<div class="container">
+															<h4>Your answer for <b style="font-weight: 500;">{{student.first_name}} {{student.last_name}}</b></h4>
+															<p>For rating questions, 1 is strongly disagree and 5 is strongly agree.</p>
+														</div>
+														
+														<!-- Show questions and your answers from last time -->
+														{% get_answer_list assessment student request.user as answer_list %}
+														{% for answer in answer_list %}
+														<div class="container" style="background-color: rgba(107, 99, 255, 0.036); border-radius: 6px;">
+															<h4 style="margin-bottom: 15px; margin-top: 30px;">{{forloop.counter}}. {{ answer.question.question_text }}</h4>
+															{% if answer.question.type_answer == answer.question.TYPE_Rating %}
+																<div>
+																	<b>1</b>  <input style="width: 95%;" type="range" class="custom-range" min="1" max="5" step="1" value="{{ answer.answer_rating }}" id="q_@{{ student.eagle_id }}{{ answer.question.id }}" name="q_@{{ student.eagle_id }}{{ answer.question.id }}"> <b> 5</b>
+																</div>
+															{% else %}
+																<textarea style="width: 95%;" rows="5" id="q_@{{ student.eagle_id }}{{ answer.question.id }}" name="q_@{{ student.eagle_id }}{{ answer.question.id }}">{{ answer.answer_text }}</textarea>
+															{% endif %}
+														</div>
+														{% endfor %}
+														<hr style="margin-bottom: 30px;">
+													
+													{% endfor %}
+												</div>
+												<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel edits</button>
+												<button type="submit" class="btn btn-primary">Save changes</button>
+												</div>
+											</form>
+										</div>
+										</div>
+									</div>
+
+
+								{% else %}
+									<button type="submit" style="background-color: gray; border: gray;" class="btn btn-primary float-right" disabled>Closed</button>
+								{% endif %}
+							</div>
+
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% else %}
+				<p>No peer assessment available.</p>
+			{% endif %}
+	</div>
+
+
+	<!-- assessments past due and not completed -->
+	<div class="container">
+
+		<h2 style="color: rgb(255, 91, 92); margin-bottom: 0;">Missed</h2>
+	
+			{% if assessment_list|length > 0 %}
+				<div class="row">
+					{% for assessment in assessment_list %}
+						{% if assessment.is_missed %}
+							{% if forloop.counter0|divisibleby:3 and not forloop.first %}<div class="w-100"></div>{% endif %}
+							<div class="col grid-box">
+								<!-- name and course  -->
+								<h3> {{ assessment.name }} </h3> 
+								<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+								<!-- description of the assessment  -->
+								{% if assessment.description != '' %}
+									<p><b>Description:</b> {{ assessment.description }}</p>
+								{% else %}
+									<p><b>Description:</b> No assessment description</p>
+								{% endif %}
+								<!-- dates  -->
+								<p> <b>Due:</b> {{ assessment.end_date }}</p>
+								<hr>
+								{% if not assessment.is_open %}
+									<button type="button" class="btn btn-secondary float-right" disabled>Closed</button>
+								{% else %}
+									<button type="button" class="btn btn-secondary float-right" disabled>Past due</button>
+								{% endif %}
+
+							</div>
+
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% else %}
+				<p>No peer assessment available.</p>
+			{% endif %}
+	</div>
+
+
+</div>
+
+{% endblock %}

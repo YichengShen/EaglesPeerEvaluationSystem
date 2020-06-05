@@ -1,0 +1,25 @@
+.col-box-completed {
+    position: relative;
+    width: 35%;
+    background-color: white;
+    color: black;
+    padding: 15px;
+    margin: 25px;
+    border-radius: 3px;
+    box-shadow: 0.5px 0.5px;
+  }
+
+
+.completed {
+    color: rgb(57, 218, 138);
+}
+
+.score-displayed {
+    font-size: medium;
+    font-weight: 50;
+}
+
+.note-displayed {
+    font-size: medium;
+    font-weight: 50;
+}

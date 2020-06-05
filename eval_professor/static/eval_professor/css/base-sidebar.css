@@ -1,0 +1,256 @@
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: #f3f4f4;
+}
+
+
+/* -------------------- The side navigation menu ------------------ */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #f3f4f4; 
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    border-right: 1px solid lightgray;
+  }
+  
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #323232;
+    display: block;
+    transition: 0.3s;
+    margin-bottom: 30px;
+
+  }
+  
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: #4a49ac;
+  }
+
+  /* Position and style the close button (top right corner) */
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 32px;
+    margin-left: 50px;
+    margin-bottom: 100px;
+    margin-top: 10px;
+  }
+  
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    transition: margin-left .5s;
+    padding: 20px;
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+/* -------------------- END ------------------ */
+
+  .menu {
+    top: 0px;
+    left: 15px;
+    font-size: 5px;
+    position: relative;
+    line-height: 80px;
+    padding: 8px;
+  
+    -moz-border-radius: 100px; 
+    border-radius: 100px; 
+  
+    text-align: center;
+  }
+
+  .menu:hover {
+    color: #4a49ac;
+  }
+
+
+/* -------------------- Logout button ------------------ */
+  .logout-btn {
+    position: absolute;
+    top: 26px;
+    right: 28px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #9391de;
+    height: 0px;
+    line-height: 0px;
+    color: #9391de;
+    font-size: 16px;
+    padding: 15px;
+    background-color: #f3f4f4;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    width: 100px;
+    text-decoration: none;
+  }  
+
+  .logout-btn:hover {
+    -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background-color: rgb(207, 200, 200);
+    color: #9391de;
+    text-decoration: none;
+  }
+
+
+/*  --------- HELP ----------- */
+.help-btn {
+  color: #9391de; 
+  border: 1px solid #9391de; 
+  background-color: #f3f4f4;
+}
+
+.help-btn:hover {
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  background-color: #9391de;
+  border: 1px solid #9391de; 
+  color: white;
+  text-decoration: none;
+}
+
+.help-text {
+  color: #9391de; 
+}
+
+.help-text:hover {
+  color: #4a49ac; 
+}
+
+/* -------------------- GRIDS ------------------ */
+
+.row {
+  position: relative;
+  top: 20px;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 45px;
+}
+
+.col {
+  position: relative;
+  width: 60px;
+  background-color: white;
+  padding: 8px;
+  margin-left: 25px;
+  margin-right: 25px;
+  border-radius: 3px;
+  box-shadow: 0.5px 0.5px;
+}
+
+.number-displayed {
+  text-align: center;
+  color: black;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.name-displayed {
+  text-align: center;
+  color: #323232;
+}
+
+.green-check{
+  width: 36px;
+  height: 36px;
+  fill: rgb(115, 229, 115);
+  display: block;
+  margin: auto;
+}
+
+.purple-icons{
+  width: 36px;
+  height: 36px;
+  fill: #6361e8;
+  display: block;
+  margin: auto;
+}
+
+.red-icons{
+  width: 36px;
+  height: 36px;
+  fill: rgb(197, 61, 16);
+  display: block;
+  margin: auto;
+}
+
+.yellow-icons{
+  width: 36px;
+  height: 36px;
+  fill: rgb(244, 154, 8);
+  display: block;
+  margin: auto;
+}
+
+
+/* ---buttons------ */
+.buttons {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  line-height: 0px;
+  color: #f3f4f4;
+  padding: 20px;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+.buttons:hover {
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  text-decoration: none;
+}
+
+.purple {
+  border: 1px solid #6f6de5;
+  background-color: #6f6de5;
+}
+
+.purple:hover {
+  border: 1px solid #6f6de5;
+  background-color: #6f6de5;
+}
+
+.red {
+  border: 1px solid #d94122;
+  background-color: #d94122;
+}
+
+.red:hover {
+  border: 1px solid #d94122;
+  background-color: #d94122;
+}
+
+
+.alert {
+  display: inline-block !important;
+}

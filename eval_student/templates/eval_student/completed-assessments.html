@@ -1,0 +1,84 @@
+{% extends 'eval_student/base-sidebar.html'%}
+
+<!-- Load templatetags -->
+{% load eval_student_extras %}
+
+{% load static %}
+
+{% block title %} Your Completed Assessments {% endblock %}
+
+{% block content%}
+	<!-- Other page content to the right of the NAV BAR -->
+	<div id="main">
+
+		<div class="container">
+			<div class="container row">
+				<h2 style="color: #6C63FF;">{{ user.first_name }}'s scores</h2>
+			</div>
+
+			{% if assessment_list|length > 0 %}
+				{% for assessment in assessment_list %}
+					<div class="column course-box">	
+						<!-- name and course  -->
+						<h3> {{ assessment.name }} </h3> 
+						<p style="font-weight: 20;"> for {{ assessment.course.course_name }}</p>
+						<!-- description of the assessment  -->
+						{% if assessment.description != '' %}
+							<h4><b>Description:</b> {{ assessment.description }}</h4>
+						{% else %}
+							<h4><b>Description:</b> No assessment description</h4>
+						{% endif %}
+						<hr>
+						{% find_result_set assessment.result_sets request.user assessment.course as result_set %}
+						<h4><b>Your overall score:</b> {{ result_set.get_overall_average }}</h4>
+						{% if result_set.get_overall_average == 0 %}
+							<p>Your score is 0 because you missed the deadline of this assessment.</p>
+						{% endif %}
+						
+						
+						<div style="margin-top: 2%; margin-bottom: 2%;">
+
+							<!-- Per-question score  -->
+							<div class="card">
+								<div class="card-header" id="headingOne_@{{ assessment.id }}">
+									<h5 class="mb-0">
+										<button style="color: #6C63FF;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne_@{{ assessment.id }}" aria-expanded="true" aria-controls="collapseOne_@{{ assessment.id }}">
+											Your score on each question
+										</button>
+									</h5>
+								</div>
+							
+								<div id="collapseOne_@{{ assessment.id }}" class="collapse" aria-labelledby="headingOne_@{{ assessment.id }}" data-parent="#accordion">
+									<div class="card-body">
+
+										<!-- print questions -->
+										{% if assessment.questions.all|length == 0 %}
+											<p>No students in the course.</p>
+										{% else %}
+											{% for question in assessment.questions.all|dictsort:"id" %}
+												{% if question.type_answer == question.TYPE_Rating %}
+													<!-- find per question avg  -->
+													{% get_per_question_average result_set question.id as per_q_avg %}
+													<p>Question {{forloop.counter}}: {{ question.question_text }} <b> Score: </b> {{ per_q_avg }}</p>
+												{% else %}
+						
+													{% get_free_response result_set question.id as free_response_text %}
+													<!-- print  -->
+													<p>Question {{forloop.counter}}: {{ question.question_text }} <b>Responses from your teammates: </b> {{ free_response_text }}</p>
+												{% endif %}
+												
+											{% endfor %}
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				{% endfor %}
+			{% else %}
+				No results available.
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

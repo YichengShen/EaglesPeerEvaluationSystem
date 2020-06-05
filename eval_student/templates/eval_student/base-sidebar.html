@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+	{% load static %}
+	<!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500&display=swap" rel="stylesheet">
+	
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<!-- FONT AWESONE -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<!-- CSS and JS -->
+	<link rel="stylesheet" href="{% static 'eval_student/css/base-sidebar.css' %}">
+	<script src="{% static 'eval_student/js/base-sidebar.js' %}"></script>
+
+	<!-- CSS and JS for other pages -->
+	<link rel="stylesheet" href="{% static 'eval_student/css/peer-assessments.css' %}">
+	<link rel="stylesheet" href="{% static 'eval_student/css/completed-assessments.css' %}">
+
+    <title>
+        {% block title %} Student Dashboard {% endblock %}
+    </title>
+  </head>
+
+<body>
+
+	<!-- Error Message -->
+	{% if messages %}
+		{% for message in messages %}
+		<div style="display: inline-block; left: 70%; background-color: #918df67a; border: #918df67a; color: #5b57e3;" 
+			class="alert alert-warning alert-dismissible fade show" role="alert">
+				{{ message }}
+				<button style="display: inline-block; font-size: large; top: 0px;" type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		{% endfor %}
+	{% endif %}
+
+	<!-- Side Navbar -->
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><i class = "fa fa-angle-left"></i></a>
+		<a href="{% url 'student-dashboard' %}">
+			<i class = "fa fa-home"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home
+		</a>
+		<a href="{% url 'peer-assessments' %}">
+            <i class = "fa fa-bar-chart"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Peer Assessments
+        </a>
+		<a href="{% url 'completed-assessments' %}">
+			<i class = "fa fa-book"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Results
+		</a>
+		<a href="{% url 'password-reset' %}">
+			<i class = "fa fa-key"></i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password Reset
+		</a>
+	</div>
+	
+	<!-- Use any element to open the sidenav -->
+	<span class="menu" style="font-size:20px;cursor:pointer" onclick="openNav()"><i class = "fa fa-bars"></i>&nbsp;&nbsp;Menu</span>
+	
+	<!-- LOGOUT button -->
+	<div class="logout_btn_container">
+		<a href = "{% url 'log_out' %}" class="logout-btn">LOGOUT</a>
+	</div>
+
+    {% block content%}
+
+    {% endblock %}
+	
+
+	<!-- have the side bar open in the initial state -->
+	<script>
+		openNav()
+	</script>
+
+</body>
+</html>

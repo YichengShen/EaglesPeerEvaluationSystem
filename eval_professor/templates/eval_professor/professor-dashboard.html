@@ -1,0 +1,53 @@
+{% extends 'eval_professor/base-sidebar.html'%}
+
+{% load static %}
+
+{% block title %} Professor Dashboard {% endblock %}
+
+{% block content%}
+<!-- Other page content to the right of the NAV BAR -->
+<div id="main">
+	<div class="container">
+		<h3>Welcome, Professor {{ user.last_name }}</h3>
+	</div>
+	<div class="container">
+		<div class="row first-row">
+			
+			<a class="btn buttons col course-box" href="{% url 'all-assessments' %}" role="button">
+				<i style="font-size: 35px; color: rgb(115, 229, 115)" class = "fa fa-bar-chart"></i> 
+				<h4 style="margin-top: 5%;"> Manage assessments </h4>
+			</a>
+
+			<a class="btn buttons col course-box" href="{% url 'my-courses' %}" role="button">
+				<i style="font-size: 35px; color: #6361e8" class = "fa fa-book"></i> 
+				<h4 style="margin-top: 5%;"> Manage courses </h4>
+			</a>
+
+			<a class="btn buttons col course-box" href="{% url 'teams-students' %}" role="button">
+				<i style="font-size: 35px; color: rgb(244, 154, 8)" class = "fa fa-group"></i> 
+				<h4 style="margin-top: 5%;"> Manage teams </h4>
+			</a>
+		</div>
+
+		<div class="row second-row">
+			<!-- add more links if need -->
+		</div>
+	</div>
+
+	<div class="container">
+		<p>
+			<button class="btn btn-primary help-btn" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+			  	Need help? Click here if you are new.
+			</button>
+		  </p>
+		  <div class="collapse" id="collapseExample">
+			<div class="card card-body">
+				<h3>Simple Procedure for Assessment Creation</h3>
+				<h4>Step 1: Go to <a class="help-text" href="{% url 'my-courses' %}">'Courses' page</a>. Create a course and add your students.</h4>
+				<h4>Step 2: Go to <a class="help-text" href="{% url 'teams-students' %}">'Teams' page</a>. Create teams and assign students to teams.</h4>
+				<h4>Step 3: Go to <a class="help-text" href="{% url 'all-assessments' %}">'Assessments' page</a>. Create a new assessment.</h4>
+			</div>
+		  </div>
+	</div>
+</div>
+{% endblock %}
