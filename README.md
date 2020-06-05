@@ -64,3 +64,9 @@
   5. Answer Model
   6. Result_set Model
   7. Assessment Model
+  
+## Entity Relationship Diagram
+<img src="images/er-diagram.png" width="800">
+
+## Data Model Traceability with Interfaces
+<img src="images/traceability.png" width="500">
