@@ -1,8 +1,36 @@
 # Eagles Peer Evaluation System
 
 ## Software Presentation
+###### Professor Login
+<img src="images/p-login.gif" width="550">
+
+###### Professor Dashboard
+<img src="images/dashboard.gif" width="550">
+
+###### Course Management
+<img src="images/course-management.gif" width="550">
+
+###### Course Creation
+<img src="images/course-creation.png" width="550">
+
+###### Team Management
+<img src="images/team-management.gif" width="550">
+
+###### Assessment Management
+<img src="images/assessment-management.gif" width="550">
+
+###### Assessment Creation
+<img src="images/assessment-creation.png" width="550">
+
 ###### Student Login
 <img src="images/s-login.gif" width="550">
+
+###### Student Assessment Page
+<img src="images/student-assessment.gif" width="550">
+
+###### Student Results Page
+<img src="images/student-results.gif" width="550">
+
 
 ## Installation
   - Install dependencies with pip  
