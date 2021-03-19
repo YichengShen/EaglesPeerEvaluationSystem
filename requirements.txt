@@ -11,7 +11,7 @@ defusedxml==0.5.0
 Django==3.0.7
 django-appconf==1.0.3
 django-user-accounts==3.0.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 entrypoints==0.2.3
 ipykernel==5.1.0
 ipython==7.2.0
